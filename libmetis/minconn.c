@@ -5,7 +5,7 @@
 \date Started 7/15/98
 \author George
 \author Copyright 1997-2009, Regents of the University of Minnesota 
-\version $Id: minconn.c 17513 2014-08-05 16:20:50Z dominique $
+\version $Id: minconn.c 10513 2011-07-07 22:06:03Z karypis $
 */
 
 #include "metislib.h"
@@ -176,7 +176,7 @@ void UpdateEdgeSubDomainGraph(ctrl_t *ctrl, idx_t u, idx_t v, idx_t ewgt,
         ctrl->adwgts[u][j] = ctrl->adwgts[u][nads-1];
         nads--;
         if (r_maxndoms != NULL && nads+1 == *r_maxndoms)
-          *r_maxndoms = ctrl->nads[iargmax(ctrl->nparts, ctrl->nads,1)];
+          *r_maxndoms = ctrl->nads[iargmax(ctrl->nparts, ctrl->nads)];
       }
     }
     ctrl->nads[u] = nads;
@@ -262,12 +262,12 @@ void EliminateSubDomainEdges(ctrl_t *ctrl, graph_t *graph)
   while (1) {
     total = isum(nparts, nads, 1);
     avg   = total/nparts;
-    max   = nads[iargmax(nparts, nads,1)];
+    max   = nads[iargmax(nparts, nads)];
 
     IFSET(ctrl->dbglvl, METIS_DBG_CONNINFO, 
           printf("Adjacent Subdomain Stats: Total: %3"PRIDX", "
                  "Max: %3"PRIDX"[%zu], Avg: %3"PRIDX"\n", 
-                 total, max, iargmax(nparts, nads,1), avg)); 
+                 total, max, iargmax(nparts, nads), avg)); 
 
     if (max < badfactor*avg)
       break;

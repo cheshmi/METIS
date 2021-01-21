@@ -8,7 +8,7 @@
  * Started 8/28/94
  * George
  *
- * $Id: mpmetis.c 14362 2013-05-21 21:35:23Z karypis $
+ * $Id: mpmetis.c 10567 2011-07-13 16:17:07Z karypis $
  *
  */
 
@@ -51,8 +51,6 @@ int main(int argc, char *argv[])
   options[METIS_OPTION_OBJTYPE] = params->objtype;
   options[METIS_OPTION_CTYPE]   = params->ctype;
   options[METIS_OPTION_IPTYPE]  = params->iptype;
-  options[METIS_OPTION_NO2HOP]  = params->no2hop;
-  options[METIS_OPTION_ONDISK]  = params->ondisk;
   options[METIS_OPTION_RTYPE]   = params->rtype;
   options[METIS_OPTION_DBGLVL]  = params->dbglvl;
   options[METIS_OPTION_UFACTOR] = params->ufactor;

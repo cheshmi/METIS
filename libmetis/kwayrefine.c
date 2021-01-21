@@ -5,7 +5,7 @@
 \date   Started 7/28/1997
 \author George 
 \author  Copyright 1997-2009, Regents of the University of Minnesota 
-\version $Id: kwayrefine.c 20398 2016-11-22 17:17:12Z karypis $ 
+\version $Id: kwayrefine.c 10737 2011-09-13 13:37:25Z karypis $ 
 */
 
 #include "metislib.h"
@@ -82,8 +82,6 @@ void RefineKWay(ctrl_t *ctrl, graph_t *orggraph, graph_t *graph)
       break;
 
     graph = graph->finer;
-
-    graph_ReadFromDisk(ctrl, graph);
 
     IFSET(ctrl->dbglvl, METIS_DBG_TIME, gk_startcputimer(ctrl->ProjectTmr));
     ASSERT(graph->vwgt != NULL);
@@ -320,11 +318,8 @@ void ProjectKWayPartition(ctrl_t *ctrl, graph_t *graph)
   idx_t *xadj, *adjncy, *adjwgt;
   idx_t *cmap, *where, *bndptr, *bndind, *cwhere, *htable;
   graph_t *cgraph;
-  int dropedges;
 
   WCOREPUSH;
-
-  dropedges = ctrl->dropedges;
 
   nparts = ctrl->nparts;
 
@@ -357,7 +352,7 @@ void ProjectKWayPartition(ctrl_t *ctrl, graph_t *graph)
         for (i=0; i<nvtxs; i++) {
           k        = cmap[i];
           where[i] = cwhere[k];
-          cmap[i]  = (dropedges ? 1 : cgraph->ckrinfo[k].ed);  /* For optimization */
+          cmap[i]  = cgraph->ckrinfo[k].ed;  /* For optimization */
         }
 
         memset(graph->ckrinfo, 0, sizeof(ckrinfo_t)*nvtxs);
@@ -433,7 +428,7 @@ void ProjectKWayPartition(ctrl_t *ctrl, graph_t *graph)
         for (i=0; i<nvtxs; i++) {
           k        = cmap[i];
           where[i] = cwhere[k];
-          cmap[i]  = (dropedges ? 1 : cgraph->vkrinfo[k].ned);  /* For optimization */
+          cmap[i]  = cgraph->vkrinfo[k].ned;  /* For optimization */
         }
 
         memset(graph->vkrinfo, 0, sizeof(vkrinfo_t)*nvtxs);
@@ -496,7 +491,7 @@ void ProjectKWayPartition(ctrl_t *ctrl, graph_t *graph)
       gk_errexit(SIGERR, "Unknown objtype of %d\n", ctrl->objtype);
   }
 
-  graph->mincut = (dropedges ? ComputeCut(graph, where) : cgraph->mincut);
+  graph->mincut = cgraph->mincut;
   icopy(nparts*graph->ncon, cgraph->pwgts, graph->pwgts);
 
   FreeGraph(&graph->coarser);
